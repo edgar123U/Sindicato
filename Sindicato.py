@@ -5,7 +5,7 @@ from datetime import datetime
 import io
 
 # Função para salvar os dados em um documento Word e retornar o buffer do arquivo
-def save_data(tipo, nome, email, número de telefone mensagem, numero_queixa_sugestao, rodape_foto):
+def save_data(tipo, nome, email, mensagem, numero_queixa_sugestao, rodape_foto):
     doc = Document()
     
     # Adiciona título
