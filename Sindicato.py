@@ -4,11 +4,8 @@ from docx.shared import Inches
 from datetime import datetime
 import io
 
-# Caminho da imagem de rodapé fixa
-RODAPE_IMAGEM_PATH = "IMG_7405.png"  # Substitua pelo caminho da imagem desejada
-
 # Função para salvar os dados em um documento Word e retornar o buffer do arquivo
-def save_data(tipo, nome, email, mensagem, numero_queixa_sugestao):
+def save_data(tipo, nome, email, mensagem, numero_queixa_sugestao, rodape_foto):
     doc = Document()
     
     # Adiciona título
@@ -21,12 +18,13 @@ def save_data(tipo, nome, email, mensagem, numero_queixa_sugestao):
     doc.add_paragraph(f'Mensagem:')
     doc.add_paragraph(mensagem)
     
-    # Adiciona rodapé com a imagem fixa
-    section = doc.sections[0]
-    footer = section.footer
-    footer_paragraph = footer.paragraphs[0]
-    run = footer_paragraph.add_run()
-    run.add_picture(RODAPE_IMAGEM_PATH, width=Inches(1.25))
+    # Adiciona rodapé com a imagem fornecida pelo usuário
+    if rodape_foto:
+        section = doc.sections[0]
+        footer = section.footer
+        footer_paragraph = footer.paragraphs[0]
+        run = footer_paragraph.add_run()
+        run.add_picture(rodape_foto, width=Inches(1.25))
     
     # Salva o documento em um buffer
     buffer = io.BytesIO()
@@ -55,16 +53,20 @@ elif menu == 'Enviar Queixa':
     nome = st.text_input("Nome (opcional)")
     email = st.text_input("Email (opcional)")
     mensagem = st.text_area("Descreva sua queixa")
+    rodape_foto = st.file_uploader("Escolha uma imagem para o rodapé", type=["jpg", "png"])
     if st.button("Enviar"):
-        doc_buffer = save_data('Queixa', nome, email, mensagem, numero_queixa_sugestao)
-        st.success(f"Sua queixa Nº {numero_queixa_sugestao} foi enviada com sucesso!")
-        st.download_button(
-            label="Baixar Documento",
-            data=doc_buffer,
-            file_name=f'Queixa_{numero_queixa_sugestao}.docx',
-            mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        )
-        numero_queixa_sugestao += 1
+        if rodape_foto:
+            doc_buffer = save_data('Queixa', nome, email, mensagem, numero_queixa_sugestao, rodape_foto)
+            st.success(f"Sua queixa Nº {numero_queixa_sugestao} foi enviada com sucesso!")
+            st.download_button(
+                label="Baixar Documento",
+                data=doc_buffer,
+                file_name=f'Queixa_{numero_queixa_sugestao}.docx',
+                mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            )
+            numero_queixa_sugestao += 1
+        else:
+            st.warning("Por favor, adicione uma imagem para o rodapé.")
 
 # Página de Enviar Sugestão
 elif menu == 'Enviar Sugestão':
@@ -72,16 +74,20 @@ elif menu == 'Enviar Sugestão':
     nome = st.text_input("Nome (opcional)")
     email = st.text_input("Email (opcional)")
     mensagem = st.text_area("Descreva sua sugestão")
+    rodape_foto = st.file_uploader("Escolha uma imagem para o rodapé", type=["jpg", "png"])
     if st.button("Enviar"):
-        doc_buffer = save_data('Sugestão', nome, email, mensagem, numero_queixa_sugestao)
-        st.success(f"Sua sugestão Nº {numero_queixa_sugestao} foi enviada com sucesso!")
-        st.download_button(
-            label="Baixar Documento",
-            data=doc_buffer,
-            file_name=f'Sugestão_{numero_queixa_sugestao}.docx',
-            mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        )
-        numero_queixa_sugestao += 1
+        if rodape_foto:
+            doc_buffer = save_data('Sugestão', nome, email, mensagem, numero_queixa_sugestao, rodape_foto)
+            st.success(f"Sua sugestão Nº {numero_queixa_sugestao} foi enviada com sucesso!")
+            st.download_button(
+                label="Baixar Documento",
+                data=doc_buffer,
+                file_name=f'Sugestão_{numero_queixa_sugestao}.docx',
+                mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            )
+            numero_queixa_sugestao += 1
+        else:
+            st.warning("Por favor, adicione uma imagem para o rodapé.")
 
 # Página de Enviar Carta de Reconhecimento
 elif menu == 'Enviar Carta de Reconhecimento':
@@ -89,13 +95,17 @@ elif menu == 'Enviar Carta de Reconhecimento':
     nome = st.text_input("Nome (opcional)")
     email = st.text_input("Email (opcional)")
     mensagem = st.text_area("Descreva o reconhecimento")
+    rodape_foto = st.file_uploader("Escolha uma imagem para o rodapé", type=["jpg", "png"])
     if st.button("Enviar"):
-        doc_buffer = save_data('Reconhecimento', nome, email, mensagem, numero_queixa_sugestao)
-        st.success(f"Sua carta de reconhecimento Nº {numero_queixa_sugestao} foi enviada com sucesso!")
-        st.download_button(
-            label="Baixar Documento",
-            data=doc_buffer,
-            file_name=f'Reconhecimento_{numero_queixa_sugestao}.docx',
-            mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        )
-        numero_queixa_sugestao += 1
+        if rodape_foto:
+            doc_buffer = save_data('Reconhecimento', nome, email, mensagem, numero_queixa_sugestao, rodape_foto)
+            st.success(f"Sua carta de reconhecimento Nº {numero_queixa_sugestao} foi enviada com sucesso!")
+            st.download_button(
+                label="Baixar Documento",
+                data=doc_buffer,
+                file_name=f'Reconhecimento_{numero_queixa_sugestao}.docx',
+                mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            )
+            numero_queixa_sugestao += 1
+        else:
+            st.warning("Por favor, adicione uma imagem para o rodapé.")
