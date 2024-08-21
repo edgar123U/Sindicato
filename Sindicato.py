@@ -5,7 +5,7 @@ from datetime import datetime
 import io
 
 # Caminho da imagem de rodapé fixa
-RODAPE_IMAGEM_PATH = "rodape.jpg"  # Substitua pelo caminho da imagem desejada
+RODAPE_IMAGEM_PATH = "IMG_7405.png"  # Substitua pelo caminho da imagem desejada
 
 # Função para salvar os dados em um documento Word e retornar o buffer do arquivo
 def save_data(tipo, nome, email, mensagem, numero_queixa_sugestao):
