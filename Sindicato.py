@@ -31,6 +31,9 @@ def save_data(tipo, nome, email, número de telefone mensagem, numero_queixa_sug
     doc.save(buffer)
     buffer.seek(0)
     return buffer
+st.set_page_config(
+    page_title="Sindicato"
+)
 
 # Título do App
 st.title("Página do Sindicato - Queixas, Sugestões e Reconhecimentos")
@@ -45,7 +48,7 @@ numero_queixa_sugestao = 1
 # Página inicial
 if menu == 'Início':
     st.header("Bem-vindo à Página do Sindicato!")
-    st.write("Aqui você pode enviar suas queixas, sugestões e cartas de reconhecimento de forma anônima ou com seu nome e email.")
+    st.write("Aqui podes enviar as tuas queixas, sugestões e cartas de reconhecimento de forma anónima ou com o teunome e email.")
 
 # Página de Enviar Queixa
 elif menu == 'Enviar Queixa':
