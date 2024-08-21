@@ -2,8 +2,9 @@ import streamlit as st
 from docx import Document
 from docx.shared import Inches
 from datetime import datetime
+import io
 
-# Função para salvar os dados em um documento Word
+# Função para salvar os dados em um documento Word e retornar o buffer do arquivo
 def save_data(tipo, nome, email, mensagem, numero_queixa_sugestao, rodape_foto):
     doc = Document()
     
@@ -25,15 +26,18 @@ def save_data(tipo, nome, email, mensagem, numero_queixa_sugestao, rodape_foto):
         run = footer_paragraph.add_run()
         run.add_picture(rodape_foto, width=Inches(1.25))
     
-    # Salva o documento
-    doc.save(f'{tipo}_{numero_queixa_sugestao}.docx')
+    # Salva o documento em um buffer
+    buffer = io.BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+    return buffer
 
 # Título do App
 st.title("Página do Sindicato - Queixas e Sugestões")
 
 # Menu de navegação
 st.sidebar.title("Menu")
-menu = st.sidebar.radio("Escolha uma opção", ['Início', 'Enviar Queixa', 'Enviar Sugestão', 'Ver Queixas e Sugestões'])
+menu = st.sidebar.radio("Escolha uma opção", ['Início', 'Enviar Queixa', 'Enviar Sugestão'])
 
 # Variável para armazenar o número da queixa ou sugestão
 numero_queixa_sugestao = 1
@@ -51,8 +55,14 @@ elif menu == 'Enviar Queixa':
     mensagem = st.text_area("Descreva sua queixa")
     rodape_foto = st.file_uploader("Escolha uma imagem para o rodapé", type=["jpg", "png"])
     if st.button("Enviar"):
-        save_data('Queixa', nome, email, mensagem, numero_queixa_sugestao, rodape_foto)
+        doc_buffer = save_data('Queixa', nome, email, mensagem, numero_queixa_sugestao, rodape_foto)
         st.success(f"Sua queixa Nº {numero_queixa_sugestao} foi enviada com sucesso!")
+        st.download_button(
+            label="Baixar Documento",
+            data=doc_buffer,
+            file_name=f'Queixa_{numero_queixa_sugestao}.docx',
+            mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
         numero_queixa_sugestao += 1
 
 # Página de Enviar Sugestão
@@ -63,11 +73,12 @@ elif menu == 'Enviar Sugestão':
     mensagem = st.text_area("Descreva sua sugestão")
     rodape_foto = st.file_uploader("Escolha uma imagem para o rodapé", type=["jpg", "png"])
     if st.button("Enviar"):
-        save_data('Sugestão', nome, email, mensagem, numero_queixa_sugestao, rodape_foto)
+        doc_buffer = save_data('Sugestão', nome, email, mensagem, numero_queixa_sugestao, rodape_foto)
         st.success(f"Sua sugestão Nº {numero_queixa_sugestao} foi enviada com sucesso!")
+        st.download_button(
+            label="Baixar Documento",
+            data=doc_buffer,
+            file_name=f'Sugestão_{numero_queixa_sugestao}.docx',
+            mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
         numero_queixa_sugestao += 1
-
-# Página de Ver Queixas e Sugestões
-elif menu == 'Ver Queixas e Sugestões':
-    st.header("Queixas e Sugestões Recebidas")
-    st.write("Os documentos Word gerados estão salvos na pasta do projeto.")
